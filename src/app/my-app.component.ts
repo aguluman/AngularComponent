@@ -3,11 +3,11 @@ import { DayTime } from './typeDefinitions';
 
 @Component({
   selector: 'my-app',
-  template: `<time-input [time]="timeInMyApp" (timeHasChanged)="timeInMyApp=$event"></time-input>
+  template: `<time-input [(time)]="timeInMyApp"></time-input>
   <pre>{{ timeInMyApp | json }}</pre>
   `
 })
 
-export class AppComponent {
+export class MyAppComponent {
   timeInMyApp: DayTime = { hours: 8, minutes: 30 };
 }

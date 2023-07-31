@@ -12,14 +12,14 @@ import { DayTime } from './typeDefinitions';
 
 export class TimeInputComponent {
   @Input() time: DayTime;
-  @Output() timeHasChanged = new EventEmitter<DayTime>();
+  @Output() timeChange = new EventEmitter<DayTime>();
 
   onAddHourButtonClick() {
     const newValue: DayTime = {
       hours: this.time.hours + 1,
       minutes: this.time.minutes
     };
-    this.timeHasChanged.emit(newValue);
+    this.timeChange.emit(newValue);
     this.time = newValue;
   }
 }
