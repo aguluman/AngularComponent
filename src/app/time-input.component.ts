@@ -1,25 +1,53 @@
-﻿import { Component, Input, Output, EventEmitter } from "@angular/core";
+﻿import { Component, forwardRef } from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { DayTime } from './typeDefinitions';
 
 @Component({
   selector: 'time-input',
   template: `
-  <input [ngModel]="time.hours" name="hours" type="number" />
-  <input [ngModel]="time.minutes" name="minutes" type="number" />
-  <button type="button" name="addHour" (click)="onAddHourButtonClick()">Add hour</button>
-  `
+      <input [ngModel]="value?.hours" name="hours" type="number" [disabled]="disabled"/>
+      <input [ngModel]="value?.minutes" name="minutes" type="number" [disabled]="disabled"/>
+      <button type="button" name="addHour" (click)="onAddHourButtonClick()" [disabled]="disabled" (blur)="onBlur()">
+        Add hour
+      </button>
+  `,
+  providers: [
+    { useExisting: forwardRef(()=> TimeInputComponent), provide: NG_VALUE_ACCESSOR, multi: true}
+  ]
 })
 
-export class TimeInputComponent {
-  @Input() time: DayTime;
-  @Output() timeChange = new EventEmitter<DayTime>();
+export class TimeInputComponent implements ControlValueAccessor {
+  value: DayTime;
+
+  writeValue(obj: any) {
+    this.value = obj;
+  }
+
+  private onChangeFunctions = [];
+  registerOnChange(fn: (v: DayTime) => void) {
+    this.onChangeFunctions.push(fn);
+  }
+
+  private onTouchedFunctions = [];
+  registerOnTouched(fn: any) {
+    this.onTouchedFunctions.push(fn);
+  }
+
+  disabled = false;
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
 
   onAddHourButtonClick() {
     const newValue: DayTime = {
-      hours: this.time.hours + 1,
-      minutes: this.time.minutes
+      hours: this.value.hours + 1,
+      minutes: this.value.minutes
     };
-    this.timeChange.emit(newValue);
-    this.time = newValue;
+    this.onChangeFunctions.forEach(fn=> fn(newValue));
+    this.value = newValue;
+  }
+
+  onBlur() {
+    this.onTouchedFunctions.forEach(fn=> fn());
   }
 }

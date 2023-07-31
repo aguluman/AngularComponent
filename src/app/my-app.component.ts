@@ -1,13 +1,22 @@
-﻿import { Component } from "@angular/core";
-import { DayTime } from './typeDefinitions';
+﻿import {Component} from "@angular/core";
+import { DayTime } from "./typeDefinitions";
 
 @Component({
   selector: 'my-app',
-  template: `<time-input [(time)]="timeInMyApp"></time-input>
-  <pre>{{ timeInMyApp | json }}</pre>
+  template: `
+    <form #exampleForm="ngForm" (ngSubmit)="performAction()">
+      <time-input [(ngModel)]="timeInMyApp" name="time"></time-input>
+      <button type="submit" [disabled]="!exampleForm.valid">
+        Perform Action</button>
+    </form>
+    <pre>{{ timeInMyApp | json }}</pre>
   `
 })
 
-export class MyAppComponent {
+export class AppComponent {
   timeInMyApp: DayTime = { hours: 8, minutes: 30 };
+
+  performAction() {
+    console.log(this.timeInMyApp);
+  }
 }
