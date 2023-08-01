@@ -5,7 +5,7 @@ import { DayTime } from "./typeDefinitions";
   selector: 'my-app',
   template: `
     <form #exampleForm="ngForm" (ngSubmit)="performAction()">
-      <time-input [(ngModel)]="timeInMyApp" name="time"></time-input>
+      <time-input [(ngModel)]="timeInMyApp" name="time" withinTimeScope></time-input>
       <button type="submit" [disabled]="!exampleForm.valid">
         Perform Action</button>
     </form>
